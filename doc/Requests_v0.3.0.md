@@ -16,7 +16,7 @@
 
 照例先从 HISTORY.rst 开始咯。
 
-```
+```rst
 0.3.0 (2011-02-25)
 ++++++++++++++++++
 
@@ -33,7 +33,7 @@
 
 而且...
 
-```
+```rst
 0.2.2 (2011-02-14)
 ++++++++++++++++++
 
@@ -60,7 +60,7 @@
 
 好的，回归正题，看下跳大版本之间都做了哪些改动。
 
-```
+```rst
 0.2.1 (2011-02-14)
 ++++++++++++++++++
 
@@ -72,7 +72,7 @@
 1. 加了对post 方法文件的支持。嗯，这个要研究下。
 2. 加了request.url 的暴露.. 这个应该很简单吧。
 
-```
+```rst
 0.2.2 (2011-02-14)
 ++++++++++++++++++
 
@@ -91,7 +91,7 @@
 所以说，要顺势而动 :)
 
 
-```
+```rst
 0.2.3 (2011-02-15)
 ++++++++++++++++++
 
@@ -105,7 +105,7 @@
 
 1. 新的HTTPHandling Methods，什么意思.. 猜测是对返回的Response类做了友好的处理。
 
-```
+```rst
 0.2.4 (2011-02-19)
 ++++++++++++++++++
 
@@ -121,7 +121,7 @@
 3. 自动认证测试。
 4. 改善了 Request 的类结构。
 
-```
+```rst
 0.3.0 (2011-02-25)
 ++++++++++++++++++
 
@@ -154,7 +154,7 @@
 
 测试终于加了关于post的测试。
 
-```
+```python
 	def test_POSTBIN_GET_POST_FILES(self):
 
 		bin = requests.post('http://www.postbin.org/')
@@ -176,7 +176,7 @@ postbin是什么鬼..我去扒一下..
 
 用ipython 测试了下
 
-```
+```python
 In [22]: import requests, time
 
 In [23]: r = requests.post('http://requestb.in/xiwxabxi', data={"ts":time.time()})
@@ -192,13 +192,13 @@ ok
 
 StringIO 是一个可以把 String 强制转换成 类似于 FILE 类的东西。标准库里面这么描述。
 
-```
+```markdown
 	StringIO — Read and write strings as files
 ```
 
 也就是说，在post和put方法里面加入files 参数来支持，可以是StirngIO类型，也可以是File类型（maybe），上源码细节。
 
-```
+```python
 		elif self.method == 'POST':
 			if (not self.sent) or anyway:
 
