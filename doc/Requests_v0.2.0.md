@@ -27,7 +27,7 @@
 
 下面是版本信息。
 
-```
+```rst
 History
 -------
 
@@ -55,7 +55,7 @@ History
 
 下面是 README.rst 信息
 
-```
+```rst
 
 Requests: The Simple (e.g. usable) HTTP Module
 ==============================================
@@ -81,7 +81,7 @@ Requests: 简单好用的HTTP 模块
 
 哈哈哈，看了这个README 我就笑了，我喜欢狂妄的年轻人。
 
-```
+```rst
 Features
 --------
 
@@ -97,7 +97,7 @@ Features
 
 嗯，都是基本功能。
 
-```
+```rst
 
 Usage
 -----
@@ -140,7 +140,7 @@ API 部分，安装部分，就直接跳过吧。
 
 requests 代码之前，先从测试代码开始吧。
 
-```
+```Python
 class RequestsTestSuite(unittest.TestCase):
 	"""Requests test cases."""
 	
@@ -181,9 +181,11 @@ class RequestsTestSuite(unittest.TestCase):
 
 凭我多年(半年)TDD的经验，这份测试肯定是代码写完之后补的。并且写完代码之后很开心，写测试的时候满脑子想着快点丢到github 上面去哈哈哈哈，只测了get 和 head ，当然也可能他找不到 url去测post :)
 
+`unittest`介绍见文件夹`unittest`。
+
 self.assertRaises 这个用法我没用过，去翻了一个标准库文档，文档里面有这样一个例子，还是很好玩的：
 
-```
+```Python
 	def test_split(self):
       # check that s.split fails when the separator is not a string
       with self.assertRaises(TypeError):
@@ -191,7 +193,7 @@ self.assertRaises 这个用法我没用过，去翻了一个标准库文档，�
 
 ```
 函数定义：
-assertRaises(exc, fun, *args, **kwds)
+`assertRaises(exc, fun, *args, **kwds)`
 
 
 ### 0x05
@@ -200,7 +202,7 @@ assertRaises(exc, fun, *args, **kwds)
 
 当使用 requests.get('www.baidu.com')时，直接到requests 包定义的相应函数，以 get 举例。
 
-```
+```Python
 def get(url, params={}, headers={}, auth=None):
 	"""Sends a GET request. Returns :class:`Response` object.
 
@@ -225,7 +227,7 @@ def get(url, params={}, headers={}, auth=None):
 ```
 先会实例化一个 Request, Request 类定义在47行。
 
-```
+```Python
 class Request(object):
 	"""The :class:`Request` object. It carries out all functionality of
 	Requests. Recommended interface is with the Requests functions.
@@ -253,11 +255,11 @@ class Request(object):
 
 ```
 
-接下来初始化这个类的各个属性。 r.method = 'GET' , r.url = url ....
+接下来初始化这个类的各个属性。 `r.method = 'GET' , r.url = url ....`
 
 在 `__setattr__`  对method做了限制。
 
-```
+```Python
 	def __setattr__(self, name, value):
 		if (name == 'method') and (value):
 			if not value in self._METHODS:
@@ -266,10 +268,26 @@ class Request(object):
 		object.__setattr__(self, name, value)
 ```
 
+三个特殊方法介绍：
+
+```Python
+# 如果 对象的item属性 被访问，同时它不存在的时候，此方法被调用。
+__getattr__(self, item):
+    pass
+# 如果要给 item 赋值，就调用这个方法。
+__setattr__(self, item, value):
+    pass
+# 当 item 被访问时自动被调用（注意：这个仅能用于新式类），无论 name 是否存在，都要被调用。
+__getattribute__(self, item):
+    pass
+```
+
+
+
 这也是一个好玩的用法，我比较水啦，如果是我，我会直接在类初始化的时候搞定这些...
 就像下面这样。
 
-```
+```Python
 class Request(object):
 	"""The :class:`Request` object. writtern by Lionel Wang	
 	"""
@@ -292,7 +310,9 @@ class Request(object):
 
 有没有高人跟我说下这样的好处？
 
-```
+**注**：如果使用上面这种方式的话只能在类初始化的时候进行特性检查，而在特性赋值时不会进行该特性检查。用上面这种方式就可以在每次改变赋值时进行特性检查。
+
+```python
 r,auth = _detect_auth(url, auth)
 ```
 
@@ -302,7 +322,7 @@ r,auth = _detect_auth(url, auth)
 
 在Requests.send() 里面，对 method 的不同，做了不一样的处理，我们只看get。
 
-```
+```python
 def send(self, anyway=False):
 		"""Sends the request. Returns True of successfull, false if not.
 		    If there was an HTTPError during transmission,
@@ -355,7 +375,7 @@ self._checks() 是封装了url是否非None 的函数。pass
 
 正如作者所说，这个版本封装了urllib, urllib2 的方法，像我这种被reqeusts 宠坏了的人，为了拆他，滚去翻urllib2的文档了 （；￣ェ￣）
 
-```
+```Python
 		if isinstance(self.params, dict):
 			params = urllib.urlencode(self.params)
 		else:
@@ -367,7 +387,7 @@ self._checks() 是封装了url是否非None 的函数。pass
 
 如果传过来parms 形如 
 
-```
+```python
 parms ={'age':23, 'name':wsp}, url='www.baidu.com'
 
 
@@ -384,7 +404,7 @@ urllib.urlencode(query, [,doseq])
 _Request 是继承了 urllib2.Requsts 的类。
 代码如下
 
-```
+```python
 class _Request(urllib2.Request):
 	"""Hidden wrapper around the urllib2.Request object. Allows for manual
 	setting of HTTP methods.
@@ -410,7 +430,7 @@ class _Request(urllib2.Request):
 
 最后组装返回的类，没什么好说的了
 
-```
+```python
 	self.response.status_code = resp.code
 	self.response.headers = resp.info().dict
 	self.response.content = resp.read()
@@ -418,7 +438,7 @@ class _Request(urllib2.Request):
 
 不过try except 写的很好玩。
 
-```
+```python
 except urllib2.HTTPError, why:
 	self.response.status_code = why.code
 ```
